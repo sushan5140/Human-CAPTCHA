@@ -46,7 +46,7 @@ h1{font-size:clamp(50px,8vw,92px);line-height:.9;letter-spacing:-.075em;margin:1
 </head>
 <body>
 <main class="app">
-<header class="top"><div class="brand"><span class="pulse"></span> Human CAPTCHA</div><div class="meta">for legal humans only</div></header>
+<header class="top"><div class="brand"><span class="pulse"></span> Human CAPTCHA</div><div class="meta">for legal humans only · build HOTFIX-1</div></header>
 
 <section class="screen" id="intro">
   <div class="kicker" id="dailyLabel">daily cooked check</div>
@@ -60,8 +60,8 @@ h1{font-size:clamp(50px,8vw,92px);line-height:.9;letter-spacing:-.075em;margin:1
     <div class="peek"><b>dare a friend</b><span>drag the group chat into it</span></div>
   </div>
   <div class="actions">
-    <button class="btn lime" id="startDaily">aight test me</button>
-    <button class="btn" id="startChaos">i'm cooked cooked</button>
+    <button type="button" class="btn lime" id="startDaily" onclick="window.hcStart&&window.hcStart('daily')">aight test me</button>
+    <button type="button" class="btn" id="startChaos" onclick="window.hcStart&&window.hcStart('chaos')">i'm cooked cooked</button>
   </div>
   <div class="mini-note" id="streakNote">no login. no lore collection. localStorage and vibes.</div>
 </section>
@@ -144,6 +144,8 @@ function rng(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
 function seededShuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function randomShuffle(a){return [...a].sort(()=>Math.random()-.5)}
 function showToast(t){toast.textContent=t;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1600)}
+function storeGet(k,fallback=""){try{return localStorage.getItem(k)??fallback}catch(e){return fallback}}
+function storeSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function setScore(delta){score=Math.max(0,Math.min(103,score+delta));scoreEl.textContent=score+"%";bar.style.width=Math.min(100,score)+"%";form.textContent=score>=90?"aura farming":score>=72?"sentient-ish":score>=55?"cooked":"deep fried"}
 function done(ok,msg,delta=8){if(answered)return;answered=true;feedback.className="feedback "+(ok?"good":"bad");feedback.textContent=msg;feedback.classList.remove("hidden");next.classList.remove("hidden");if(ok){runStreak++;setScore(delta)}else{runStreak=0;setScore(-4)}runStreakEl.textContent=runStreak}
 function choices(items,cb){const w=document.createElement("div");w.className="choices";items.forEach((x,i)=>{const b=document.createElement("button");b.className="choice";b.textContent=x;b.onclick=()=>cb(i);w.appendChild(b)});ui.appendChild(w)}
@@ -195,7 +197,13 @@ const pool=[
 function makeRun(){
  const must=["wrong day","37 tabs","don't click","final boss"];
  const chosen=[];
- const picker=mode==="daily"?(seed=hash(dateKey()),seededShuffle(pool)):randomShuffle(pool);
+ let picker;
+ if(mode==="daily"){
+   seed=hash(dateKey());
+   picker=seededShuffle(pool);
+ }else{
+   picker=randomShuffle(pool);
+ }
  must.forEach(cat=>{const q=picker.find(x=>x.cat===cat);if(q)chosen.push(q)});
  const rest=picker.filter(x=>!chosen.includes(x)&&x.cat!=="final boss").slice(0,4);
  const final=chosen.find(x=>x.cat==="final boss");
@@ -218,15 +226,17 @@ function begin(which){
  $("#gameKicker").textContent=mode==="daily"?"same cursed run as everyone today":"chaos mode. no adult supervision";
  intro.classList.add("hidden");result.classList.add("hidden");game.classList.remove("hidden");render();
 }
+window.hcStart=begin;
+
 function updateStreak(){
- const today=dateKey(),last=localStorage.getItem("hc_last"),n=parseInt(localStorage.getItem("hc_streak")||"0",10);
+ const today=dateKey(),last=storeGet("hc_last"),n=parseInt(storeGet("hc_streak","0")||"0",10);
  if(last===today)return n||1;
  const d=new Date();d.setDate(d.getDate()-1);const y=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
- const next=last===y?n+1:1;localStorage.setItem("hc_last",today);localStorage.setItem("hc_streak",String(next));return next;
+ const next=last===y?n+1:1;storeSet("hc_last",today);storeSet("hc_streak",String(next));return next;
 }
 function finish(){
  game.classList.add("hidden");result.classList.remove("hidden");
- const out=outcomes.find(x=>score>=x.min),st=mode==="daily"?updateStreak():parseInt(localStorage.getItem("hc_streak")||"0",10);
+ const out=outcomes.find(x=>score>=x.min),st=mode==="daily"?updateStreak():parseInt(storeGet("hc_streak","0")||"0",10);
  finalScore.textContent=score;archetypeEl.textContent=out.name;resultCopy.textContent=out.copy;finalForm.textContent=form.textContent;dailyStreakEl.textContent=st+" day"+(st===1?"":"s");reality.textContent=score>=72?"kinda restored":"still loading";secret.classList.toggle("hidden",score<94);
 }
 async function shareText(kind){
@@ -236,12 +246,15 @@ async function shareText(kind){
  try{await navigator.clipboard.writeText(text);showToast(kind==="dare"?"victim link copied":"receipt copied")}catch(e){showToast("copy failed rip")}
 }
 
-$("#startDaily").onclick=()=>begin("daily");$("#startChaos").onclick=()=>begin("chaos");
+const startDaily=$("#startDaily"),startChaos=$("#startChaos");
+if(startDaily) startDaily.onclick=()=>begin("daily");
+if(startChaos) startChaos.onclick=()=>begin("chaos");
 next.onclick=()=>{if(step<run.length-1){step++;render()}else finish()};
 skip.onclick=()=>done(true,"skipped. honestly very on brand.",5);
 $("#again").onclick=()=>begin("chaos");$("#share").onclick=()=>shareText("share");$("#dare").onclick=()=>shareText("dare");
 
-const streak=parseInt(localStorage.getItem("hc_streak")||"0",10);
+window.addEventListener("error",e=>{console.error("Human CAPTCHA runtime error:",e.error||e.message);showToast("site tripped 💀 refresh once")});
+const streak=parseInt(storeGet("hc_streak","0")||"0",10);
 $("#dailyRun").textContent="same daily nonsense · "+dateKey();
 $("#streakNote").textContent=(streak?"streak: "+streak+" day"+(streak===1?"":"s")+" · ":"")+"no login · no tracking · just vibes";
 if(new URLSearchParams(location.search).has("dare")){$("#dailyLabel").textContent="someone sent you here lmao";$("#startDaily").textContent="accept the dare ig"}
