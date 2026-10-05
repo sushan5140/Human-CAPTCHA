@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" content="#0a0a0a" />
+<title>Human CAPTCHA — prove you still exist</title>
+<meta name="description" content="A tiny anti-doomscroll experiment that asks you to prove you're still human." />
+<style>
+:root{
+  --bg:#090909;--panel:#111;--panel2:#171717;--text:#f5f5f5;--muted:#919191;
+  --line:#242424;--good:#a8ff60;--warn:#ffd166;--bad:#ff6b6b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}
+body{min-height:100vh;display:grid;place-items:center;padding:22px;background:
+radial-gradient(circle at 50% -20%,#1a1a1a 0,#0d0d0d 34%,#090909 70%)}
+.app{width:min(860px,100%);border:1px solid var(--line);border-radius:28px;overflow:hidden;background:rgba(14,14,14,.94);box-shadow:0 30px 100px rgba(0,0,0,.38)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em}
+.pulse{width:10px;height:10px;border-radius:50%;background:var(--good);box-shadow:0 0 18px rgba(168,255,96,.55)}
+.meta{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}
+.screen{padding:clamp(26px,6vw,58px)}
+.kicker{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+h1{font-size:clamp(44px,8vw,82px);line-height:.95;letter-spacing:-.065em;margin:18px 0 18px;max-width:720px}
+.lead{font-size:clamp(17px,2.4vw,22px);line-height:1.5;color:#b8b8b8;max-width:650px;margin:0}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{border:1px solid var(--line);border-radius:14px;background:#181818;color:var(--text);padding:13px 17px;min-height:46px;cursor:pointer;transition:.18s ease;font-weight:700}
+.btn:hover{transform:translateY(-1px);border-color:#3d3d3d}
+.btn.primary{background:var(--text);color:#0b0b0b;border-color:var(--text)}
+.btn.ghost{color:#bcbcbc}
+.hidden{display:none!important}
+.challenge-wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-top:28px}
+.challenge{border:1px solid var(--line);border-radius:22px;padding:24px;background:var(--panel)}
+.challenge .num{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}
+.challenge h2{font-size:clamp(28px,4.4vw,44px);line-height:1.08;letter-spacing:-.045em;margin:18px 0 12px}
+.challenge p{color:#a7a7a7;line-height:1.55;margin:0 0 18px}
+.input-row{display:flex;gap:10px;flex-wrap:wrap}
+.textinput{flex:1;min-width:220px;background:#0d0d0d;color:#fff;border:1px solid #2d2d2d;border-radius:12px;padding:13px 14px;outline:none}
+.textinput:focus{border-color:#555}
+.side{border:1px solid var(--line);border-radius:22px;padding:20px;background:var(--panel2)}
+.stat{padding:12px 0;border-bottom:1px solid var(--line)}
+.stat:last-child{border-bottom:0}
+.stat label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+.stat strong{font-size:30px;letter-spacing:-.05em}
+.progress{height:7px;border-radius:999px;background:#252525;overflow:hidden;margin-top:10px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--warn),var(--good));transition:width .35s ease}
+.feedback{margin-top:14px;padding:13px 14px;border-radius:12px;border:1px solid var(--line);font-size:14px;color:#c9c9c9}
+.feedback.good{border-color:#31451f;color:#cfffaa;background:#12190d}
+.feedback.bad{border-color:#4a2525;color:#ffb1b1;background:#1b1010}
+.choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.choice{border:1px solid #2d2d2d;background:#101010;color:#e9e9e9;border-radius:12px;padding:14px;cursor:pointer;text-align:left;min-height:48px}
+.choice:hover{border-color:#484848}
+.footer{padding:16px 18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#737373;font:11px ui-monospace,SFMono-Regular,Menlo,monospace}
+.result-card{margin-top:30px;border:1px solid var(--line);border-radius:22px;padding:26px;background:var(--panel)}
+.result-title{font-size:clamp(34px,6vw,58px);letter-spacing:-.055em;margin:0 0 10px}
+.result-copy{color:#ababab;line-height:1.55;max-width:640px}
+.badge{display:inline-block;margin-top:18px;padding:8px 11px;border-radius:999px;border:1px solid #31451f;color:#cfffaa;background:#12190d;font:12px ui-monospace,SFMono-Regular,Menlo,monospace}
+.note{margin-top:18px;color:#767676;font-size:13px;line-height:1.5}
+@media(max-width:720px){
+  body{padding:10px}.app{border-radius:20px}.screen{padding:28px 20px}.challenge-wrap{grid-template-columns:1fr}.choice-grid{grid-template-columns:1fr}.topbar{padding:12px 14px}.meta{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="app" id="app">
+  <header class="topbar">
+    <div class="brand"><span class="pulse"></span> Human CAPTCHA</div>
+    <div class="meta">anti-doomscroll protocol / v0.1</div>
+  </header>
+
+  <section class="screen" id="intro">
+    <div class="kicker">you've been online too long</div>
+    <h1>prove you still exist.</h1>
+    <p class="lead">No traffic lights. No motorcycles. Just tiny reality checks for people who opened one tab and somehow lost 47 minutes.</p>
+    <div class="actions">
+      <button class="btn primary" id="startBtn">begin humanity check</button>
+      <button class="btn ghost" id="whyBtn">why does this exist?</button>
+    </div>
+    <div class="feedback hidden" id="whyBox">Because most CAPTCHAs ask whether you're a robot. This one asks whether you're still a person or you've entered NPC mode.</div>
+  </section>
+
+  <section class="screen hidden" id="game">
+    <div class="kicker">humanity check in progress</div>
+    <div class="challenge-wrap">
+      <div class="challenge">
+        <div class="num" id="stepLabel">CHECK 1 / 5</div>
+        <h2 id="challengeTitle">Loading humanity…</h2>
+        <p id="challengeText"></p>
+        <div id="challengeUI"></div>
+        <div class="feedback hidden" id="feedback"></div>
+        <div class="actions">
+          <button class="btn primary hidden" id="nextBtn">next check</button>
+          <button class="btn ghost" id="skipBtn">i refuse to participate</button>
+        </div>
+      </div>
+      <aside class="side">
+        <div class="stat">
+          <label>HUMANITY</label>
+          <strong id="humanityScore">50%</strong>
+          <div class="progress"><div class="bar" id="humanityBar"></div></div>
+        </div>
+        <div class="stat"><label>STREAK</label><strong id="streak">0</strong></div>
+        <div class="stat"><label>CURRENT STATUS</label><strong id="statusText" style="font-size:20px">suspicious</strong></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen hidden" id="result">
+    <div class="kicker">protocol complete</div>
+    <h1 id="resultHeading">humanity restored.</h1>
+    <div class="result-card">
+      <h2 class="result-title" id="finalScore">82% human</h2>
+      <p class="result-copy" id="resultCopy"></p>
+      <span class="badge" id="resultBadge">CERTIFIED: probably a person</span>
+      <div class="actions">
+        <button class="btn primary" id="againBtn">run it again</button>
+      </div>
+    </div>
+    <p class="note">This is a playful self-interruption tool, not a psychological or medical assessment. Nothing leaves your browser.</p>
+  </section>
+
+  <footer class="footer">
+    <span>built at an unreasonable hour</span>
+    <span>no accounts · no tracking · no backend</span>
+  </footer>
+</main>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s);
+const intro=$("#intro"),game=$("#game"),result=$("#result"),start=$("#startBtn"),why=$("#whyBtn"),whyBox=$("#whyBox");
+const title=$("#challengeTitle"),text=$("#challengeText"),ui=$("#challengeUI"),feedback=$("#feedback"),next=$("#nextBtn"),skip=$("#skipBtn");
+const stepLabel=$("#stepLabel"),scoreEl=$("#humanityScore"),bar=$("#humanityBar"),streakEl=$("#streak"),status=$("#statusText");
+const finalScore=$("#finalScore"),resultHeading=$("#resultHeading"),resultCopy=$("#resultCopy"),resultBadge=$("#resultBadge"),again=$("#againBtn");
+
+let score=50,step=0,streak=0,answered=false;
+const challenges=[
+  {
+    title:"what were you doing before you opened this tab?",
+    text:"Type literally anything. The point is whether your brain still remembers the main quest.",
+    type:"text",
+    placeholder:"e.g. fixing OAuth, studying, absolutely nothing",
+    validate:v=>v.trim().length>=3,
+    success:"memory detected. main quest recovered.",
+    fail:"bro forgot the plot already."
+  },
+  {
+    title:"name one thing you can hear right now.",
+    text:"Not from your screen. From the actual physical world around you.",
+    type:"text",
+    placeholder:"fan, traffic, keyboard, someone yelling…",
+    validate:v=>v.trim().length>=2,
+    success:"environmental awareness confirmed.",
+    fail:"silence is allowed. blank input is suspicious."
+  },
+  {
+    title:"pick the most human option.",
+    text:"There is technically no correct answer. Unfortunately, there absolutely is.",
+    type:"choices",
+    choices:["open another tab","drink some water","refresh the same app again","say 'one more reel'"],
+    correct:1,
+    success:"hydration instinct detected. extremely biological.",
+    fail:"NPC path selected."
+  },
+  {
+    title:"what day is it?",
+    text:"No shame. We have all been there.",
+    type:"day",
+    success:"temporal awareness: online.",
+    fail:"time has become soup."
+  },
+  {
+    title:"final check: leave the screen for ten seconds.",
+    text:"Look at something that isn't made of pixels. Then come back and tell me you did it.",
+    type:"timer",
+    success:"contact with reality established.",
+    fail:"ten seconds was too powerful."
+  },
+  {
+    title:"what is the next useful thing you could do?",
+    text:"Not the whole life plan. One tiny next action.",
+    type:"text",
+    placeholder:"reply to email, finish one function, sleep…",
+    validate:v=>v.trim().length>=3,
+    success:"intent detected. human operating system responsive.",
+    fail:"no next action found. side-quest spiral likely."
+  }
+];
+
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+let run=[];
+
+function setScore(delta){
+  score=Math.max(0,Math.min(100,score+delta));
+  scoreEl.textContent=score+"%";bar.style.width=score+"%";
+  status.textContent=score>=80?"alarmingly human":score>=60?"probably human":score>=40?"suspicious":"NPC mode";
+}
+function showFeedback(ok,msg){
+  feedback.className="feedback "+(ok?"good":"bad");
+  feedback.textContent=msg;feedback.classList.remove("hidden");next.classList.remove("hidden");answered=true;
+  if(ok){streak++;setScore(10)}else{streak=0;setScore(-8)}
+  streakEl.textContent=streak;
+}
+function render(){
+  answered=false;feedback.classList.add("hidden");next.classList.add("hidden");ui.innerHTML="";
+  const c=run[step];stepLabel.textContent="CHECK "+(step+1)+" / "+run.length;title.textContent=c.title;text.textContent=c.text;
+  if(c.type==="text"){
+    ui.innerHTML='<div class="input-row"><input class="textinput" id="answerInput" placeholder="'+c.placeholder.replace(/"/g,'&quot;')+'" /><button class="btn" id="submitText">submit proof</button></div>';
+    $("#submitText").addEventListener("click",()=>{if(answered)return;const v=$("#answerInput").value;showFeedback(c.validate(v),c.validate(v)?c.success:c.fail)});
+    $("#answerInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("#submitText").click()});
+  }
+  if(c.type==="choices"){
+    const wrap=document.createElement("div");wrap.className="choice-grid";
+    c.choices.forEach((ch,i)=>{const b=document.createElement("button");b.className="choice";b.textContent=ch;b.addEventListener("click",()=>{if(answered)return;showFeedback(i===c.correct,i===c.correct?c.success:c.fail)});wrap.appendChild(b)});ui.appendChild(wrap);
+  }
+  if(c.type==="day"){
+    const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],today=new Date().getDay();
+    const opts=shuffle(days.map((d,i)=>({d,i}))).slice(0,4);if(!opts.some(x=>x.i===today))opts[0]={d:days[today],i:today};
+    const wrap=document.createElement("div");wrap.className="choice-grid";shuffle(opts).forEach(o=>{const b=document.createElement("button");b.className="choice";b.textContent=o.d;b.addEventListener("click",()=>{if(answered)return;showFeedback(o.i===today,o.i===today?c.success:c.fail)});wrap.appendChild(b)});ui.appendChild(wrap);
+  }
+  if(c.type==="timer"){
+    const b=document.createElement("button");b.className="btn";b.textContent="start 10-second reality break";ui.appendChild(b);
+    b.addEventListener("click",()=>{if(answered)return;let n=10;b.disabled=true;b.textContent=n+"…";const t=setInterval(()=>{n--;b.textContent=n>0?n+"…":"i'm back";if(n<=0){clearInterval(t);b.disabled=false;b.addEventListener("click",()=>{if(!answered)showFeedback(true,c.success)},{once:true})}},1000)});
+  }
+}
+function begin(){
+  score=50;step=0;streak=0;run=shuffle(challenges).slice(0,5);scoreEl.textContent="50%";bar.style.width="50%";streakEl.textContent="0";status.textContent="suspicious";
+  intro.classList.add("hidden");result.classList.add("hidden");game.classList.remove("hidden");render();
+}
+function finish(){
+  game.classList.add("hidden");result.classList.remove("hidden");
+  finalScore.textContent=score+"% human";
+  if(score>=80){resultHeading.textContent="humanity restored.";resultCopy.textContent="You remembered the plot, noticed the physical world, and survived five consecutive attempts to behave like a conscious organism.";resultBadge.textContent="CERTIFIED: alarmingly human";}
+  else if(score>=60){resultHeading.textContent="probably still human.";resultCopy.textContent="Some signs of life detected. You may continue using the internet, preferably after touching something that is not a screen.";resultBadge.textContent="CERTIFIED: probably a person";}
+  else if(score>=40){resultHeading.textContent="humanity inconclusive.";resultCopy.textContent="You are either tired, distracted, or extremely committed to the bit. A glass of water and one completed task may improve results.";resultBadge.textContent="STATUS: suspiciously online";}
+  else{resultHeading.textContent="NPC mode detected.";resultCopy.textContent="No emergency. Just close one tab. Any tab. Prove you still have free will.";resultBadge.textContent="STATUS: side quest consumed main quest";}
+}
+start.addEventListener("click",begin);why.addEventListener("click",()=>whyBox.classList.toggle("hidden"));
+next.addEventListener("click",()=>{if(step<run.length-1){step++;render()}else finish()});
+skip.addEventListener("click",()=>{if(answered)return;showFeedback(false,"refusal recorded. honestly, kind of human.")});
+again.addEventListener("click",begin);
+bar.style.width="50%";
+})();
+</script>
+</body>
+</html>
