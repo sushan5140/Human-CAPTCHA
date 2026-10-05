@@ -30,6 +30,10 @@ body{
 h1{font-size:clamp(48px,8.6vw,92px);line-height:.9;letter-spacing:-.075em;margin:17px 0 20px;max-width:780px}
 .lead{font-size:clamp(17px,2.2vw,22px);line-height:1.55;color:#b8b8b4;max-width:720px;margin:0}
 .hero-badge{display:inline-flex;gap:8px;align-items:center;margin-top:24px;border:1px solid #2d2d2d;background:#111;border-radius:999px;padding:8px 11px;color:#aaa;font:11px ui-monospace,SFMono-Regular,Menlo,monospace}
+.peek-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}
+.peek{border:1px solid #292929;border-radius:14px;padding:12px;background:#0d0d0d}
+.peek b{display:block;font-size:13px;margin-bottom:4px}
+.peek span{color:#777;font-size:11px;line-height:1.35}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.btn{min-height:46px;border:1px solid var(--line);border-radius:14px;background:#171717;color:var(--text);padding:13px 17px;font-weight:750;cursor:pointer;transition:.18s ease}.btn:hover{transform:translateY(-2px);border-color:#454545}.btn:active{transform:scale(.99)}.btn.primary{background:var(--text);color:#090909;border-color:var(--text)}.btn.lime{background:var(--lime);color:#0b0b0b;border-color:var(--lime)}.btn.ghost{color:#b5b5b1}
 .hidden{display:none!important}
 .mini-note{margin-top:16px;color:#74746f;font-size:13px;line-height:1.5}
@@ -53,7 +57,7 @@ h1{font-size:clamp(48px,8.6vw,92px);line-height:.9;letter-spacing:-.075em;margin
 .secret{margin-top:18px;border:1px dashed #414141;border-radius:15px;padding:15px;color:#aaa;background:#0c0c0c}.secret strong{color:var(--lime)}
 .footer{padding:15px 18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#696965;font:10px ui-monospace,SFMono-Regular,Menlo,monospace}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(15px);background:#f4f4ef;color:#0b0b0b;padding:11px 14px;border-radius:999px;font-weight:750;font-size:13px;opacity:0;pointer-events:none;transition:.22s;z-index:20}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:720px){body{padding:9px}.app{border-radius:20px}.screen{padding:28px 19px}.challenge-grid{grid-template-columns:1fr}.choices{grid-template-columns:1fr}.receipt-grid{grid-template-columns:1fr}.meta{display:none}.challenge{min-height:0}.scorebig{font-size:76px}}
+@media(max-width:720px){body{padding:9px}.app{border-radius:20px}.screen{padding:28px 19px}.challenge-grid{grid-template-columns:1fr}.choices{grid-template-columns:1fr}.receipt-grid{grid-template-columns:1fr}.peek-grid{grid-template-columns:repeat(2,1fr)}.meta{display:none}.challenge{min-height:0}.scorebig{font-size:76px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -64,13 +68,19 @@ h1{font-size:clamp(48px,8.6vw,92px);line-height:.9;letter-spacing:-.075em;margin
 <section class="screen" id="intro">
   <div class="kicker" id="dailyLabel">daily humanity check</div>
   <h1>prove you still exist.</h1>
-  <p class="lead">The internet already knows you're not a robot. This checks the more important question: <b>are you still acting like a human?</b></p>
+  <p class="lead">CAPTCHA normally asks if you're a robot. This one asks something worse: <b>how cooked are you right now?</b></p>
   <div class="hero-badge"><span>◉</span><span id="dailyRun">today's shared run loading…</span></div>
-  <div class="actions">
-    <button class="btn lime" id="startDaily">take today's check</button>
-    <button class="btn" id="startChaos">i'm extremely cooked</button>
+  <div class="peek-grid">
+    <div class="peek"><b>daily check</b><span>same nonsense for everyone today</span></div>
+    <div class="peek"><b>chaos mode</b><span>for when normal is not enough</span></div>
+    <div class="peek"><b>humanity receipt</b><span>yes it judges you at the end</span></div>
+    <div class="peek"><b>dare a friend</b><span>drag someone else into this</span></div>
   </div>
-  <div class="mini-note" id="streakNote">No account. No tracking. Your daily streak stays only in this browser.</div>
+  <div class="actions">
+    <button class="btn lime" id="startDaily">do today's nonsense</button>
+    <button class="btn" id="startChaos">nah i'm COOKED cooked</button>
+  </div>
+  <div class="mini-note" id="streakNote">No login. No weird data grab. Just vibes and localStorage.</div>
 </section>
 
 <section class="screen hidden" id="game">
@@ -144,11 +154,11 @@ const lines=[
  "If you were a browser tab, I'd finally stop opening new ones."
 ];
 const archetypes=[
-  {min:92,name:"Certified Organism",copy:"You remembered reality, moved voluntarily, and somehow resisted becoming a browser extension. Disturbingly human."},
-  {min:82,name:"Main-Quest Survivor",copy:"You got distracted, recovered the plot, and returned with most of your consciousness intact."},
-  {min:70,name:"Chronically Online, Recoverable",copy:"The internet has you, but not completely. There are still traces of free will in the sample."},
-  {min:55,name:"Side-Quest Goblin",copy:"You entered for one thing and emerged with twelve tabs, three ideas, and no memory of the original mission."},
-  {min:0,name:"Chair Fossil",copy:"Carbon dating suggests you have occupied the same posture since the previous software update."}
+  {min:92,name:"Certified Organism",copy:"You touched reality for a few minutes and somehow came back alive. Embarrassingly human."},
+  {min:82,name:"Main-Quest Survivor",copy:"You forgot the plot, found it again, and only lost like 12 tabs in the process."},
+  {min:70,name:"Chronically Online, Recoverable",copy:"The feed has custody of you but apparently visitation rights still exist."},
+  {min:55,name:"Side-Quest Goblin",copy:"You opened one thing and somehow came back with 14 tabs, one random obsession, and zero progress."},
+  {min:0,name:"Chair Fossil",copy:"At this point the chair should start charging you rent."}
 ];
 
 function dateKey(){
@@ -170,17 +180,17 @@ function timerBox(seconds,label,yes){
 }
 
 const pool=[
- {phase:"warm-up",cat:"main quest",title:"what were you doing before this tab?",desc:"No deep philosophy. Just prove your brain still remembers the plot.",render(){textBox("fixing OAuth, studying, absolutely nothing…",v=>v.trim().length>2,"plot recovered. protagonist status restored.","memory buffer empty. suspicious.")}},
- {phase:"warm-up",cat:"reality",title:"name one thing you can hear that isn't this device.",desc:"The physical world is still running in another tab.",render(){textBox("fan, traffic, someone yelling…",v=>v.trim().length>1,"environment detected. good sign.","reality returned no audio.")}},
- {phase:"personal",cat:"body check",title:"how long have you been sitting like that?",desc:"Pick the closest answer. Your chair will not be notified.",render(){choices(["under 20 min","20–45 min","45–90 min","time has lost meaning"],i=>complete(true,i<2?"acceptable statue levels.":"your chair has had enough custody of you.",7))}},
- {phase:"personal",cat:"posture",title:"inspect your current shape.",desc:"No photos. We trust your testimony, unfortunately.",render(){choices(["functional human","slightly tense","shrimp mode","Victorian gargoyle"],i=>complete(true,i===0?"rare ergonomic sighting confirmed.":"vertebral plot twist detected.",7))}},
- {phase:"physical",cat:"tiny exercise",title:"stand up. yes, actually.",desc:"If comfortable, stand, gently roll your shoulders, and look at something farther away than the screen.",render(){timerBox(20,"20-second physical-world patch","movement packet installed.")}},
- {phase:"physical",cat:"screen break",title:"ten seconds without pixels.",desc:"Look away. No cheating by staring at a smartwatch.",render(){timerBox(10,"tiny reality break","contact with non-pixel matter restored.")}},
- {phase:"weird",cat:"hobby spark",title:"your brain requests non-productive joy.",desc:"What hobby would you touch for 15 guilt-free minutes if nobody measured your output?",render(){textBox("music, sketching, walking, cooking, gaming…",v=>v.trim().length>1,"fun.exe found on disk.","no hobby detected. capitalism wins this round.")}},
- {phase:"weird",cat:"rizz packet",title:"dopamine delivery arrived.",desc:"One terrible line. Legally you must survive it.",render(){const line=lines[Math.floor((mode==="daily"?rng():Math.random())*lines.length)];ui.innerHTML='<div class="resetbox"><strong>RIZZ PACKET</strong><div class="rizz">'+line+'</div><button class="btn" id="rizzBtn" style="margin-top:15px">that's criminal 😭</button></div>';$("#rizzBtn").onclick=()=>complete(true,"dopamine packet accepted against better judgment.",8)}},
- {phase:"chaos",cat:"free will",title:"prove you still have one independent thought.",desc:"Choose the option that least resembles being algorithmically farmed.",render(){choices(["open Shorts","refresh feed","drink water and close one tab","watch 'just one more'"],i=>complete(i===2,i===2?"free will detected. extremely rare.":"algorithm wins this interaction."))}},
- {phase:"chaos",cat:"future you",title:"future-you has entered the chat.",desc:"What is one tiny thing you can do now so they hate you 4% less?",render(){textBox("send the email, save the file, sleep…",v=>v.trim().length>2,"future-you has reduced your sentence.","future-you left you on read.")}},
- {phase:"chaos",cat:"day check",title:"what day is it?",desc:"This is not a trick. Which is concerning.",render(){const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],today=new Date().getDay();let opts=seededShuffle(days.map((d,i)=>({d,i}))).slice(0,4);if(!opts.some(x=>x.i===today))opts[0]={d:days[today],i:today};opts=seededShuffle(opts);choices(opts.map(x=>x.d),i=>complete(opts[i].i===today,opts[i].i===today?"temporal awareness online.":"time has become soup."))}}
+ {phase:"warm-up",cat:"main quest",title:"what were you doing before this tab?",desc:"be fr what were you ACTUALLY doing before the internet kidnapped you",render(){textBox("fixing OAuth, studying, absolutely nothing…",v=>v.trim().length>2,"oh wow you remembered. main character moment.","yeah no the plot is gone 😭")}},
+ {phase:"warm-up",cat:"reality",title:"name one thing you can hear that isn't this device.",desc:"there is allegedly a world outside this screen",render(){textBox("fan, traffic, someone yelling…",v=>v.trim().length>1,"okayyy outside world still exists","nothing?? bro lives in the void")}},
+ {phase:"personal",cat:"body check",title:"how long have you been sitting like that?",desc:"no lying this is between you and the chair",render(){choices(["under 20 min","20–45 min","45–90 min","time has lost meaning"],i=>complete(true,i<2?"fair enough you're not furniture yet":"you and that chair are basically in a relationship now",7))}},
+ {phase:"personal",cat:"posture",title:"inspect your current shape.",desc:"be honest nobody is screenshotting this",render(){choices(["functional human","slightly tense","shrimp mode","Victorian gargoyle"],i=>complete(true,i===0?"wait... normal posture?? in THIS economy??":"shrimp allegations confirmed",7))}},
+ {phase:"physical",cat:"tiny exercise",title:"stand up. yes, actually.",desc:"if you're comfy doing it stand up for 20 secs roll your shoulders once and stare at literally anything that isn't glowing",render(){timerBox(20,"20-second physical-world patch","there. body rebooted. don't make it emotional.")}},
+ {phase:"physical",cat:"screen break",title:"ten seconds without pixels.",desc:"look away for ten seconds. smartwatch does NOT count nice try.",render(){timerBox(10,"tiny reality break","congrats you saw an object in real life")}},
+ {phase:"weird",cat:"hobby spark",title:"your brain requests non-productive joy.",desc:"if nobody cared about productivity for 15 mins what would you actually wanna do",render(){textBox("music, sketching, walking, cooking, gaming…",v=>v.trim().length>1,"SEE. you do have hobbies 😭","damn they really turned you into LinkedIn")}},
+ {phase:"weird",cat:"rizz packet",title:"dopamine delivery arrived.",desc:"one horrible line because apparently your dopamine budget is low",render(){const line=lines[Math.floor((mode==="daily"?rng():Math.random())*lines.length)];ui.innerHTML='<div class="resetbox"><strong>RIZZ PACKET</strong><div class="rizz">'+line+'</div><button class="btn" id="rizzBtn" style="margin-top:15px">that's criminal 😭</button></div>';$("#rizzBtn").onclick=()=>complete(true,"you hated it. you smiled. case closed.",8)}},
+ {phase:"chaos",cat:"free will",title:"okay be painfully honest.",desc:"what happens after you say ‘one more reel’?",render(){choices(["I actually stop","7 more magically happen","I switch apps and call it a break","it becomes tomorrow"],i=>{const msgs=["LIAR 😭","there we go. human behavior detected.","elite loophole. deeply human.","oh you're GONE gone"];complete(true,msgs[i],i===0?4:9)})}},
+ {phase:"chaos",cat:"future you",title:"future-you has entered the chat.",desc:"what tiny thing can you do now so future-you doesn't call you a loser later",render(){textBox("send the email, save the file, sleep…",v=>v.trim().length>2,"future-you says "fine we're cool"","future-you blocked you")}},
+ {phase:"chaos",cat:"day check",title:"what day is it?",desc:"no googling. that would be CRAZY.",render(){const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],today=new Date().getDay();let opts=seededShuffle(days.map((d,i)=>({d,i}))).slice(0,4);if(!opts.some(x=>x.i===today))opts[0]={d:days[today],i:today};opts=seededShuffle(opts);choices(opts.map(x=>x.d),i=>complete(true,opts[i].i===today?"okay calendar privileges retained":"wrong day but honestly valid. days are fake anyway.",opts[i].i===today?9:6))}}
 ];
 
 function makeRun(){
@@ -195,7 +205,7 @@ function render(){
 }
 function begin(which){
  mode=which;score=50;step=0;runStreak=0;run=makeRun();scoreEl.textContent="50%";bar.style.width="50%";runStreakEl.textContent="0";form.textContent="suspicious";chaos.textContent="civilized";
- $("#gameKicker").textContent=mode==="daily"?"today's shared humanity check":"chaos mode · no warranty";
+ $("#gameKicker").textContent=mode==="daily"?"same chaos as everyone else today":"chaos mode. bad decisions encouraged";
  intro.classList.add("hidden");result.classList.add("hidden");game.classList.remove("hidden");render()
 }
 function updateDailyStreak(){
@@ -224,7 +234,7 @@ async function dareFriend(){
 
 $("#startDaily").onclick=()=>begin("daily");$("#startChaos").onclick=()=>begin("chaos");
 next.onclick=()=>{if(step<run.length-1){step++;render()}else finish()};
-skip.onclick=()=>complete(false,"skip accepted. refusing arbitrary authority is technically human.");
+skip.onclick=()=>complete(false,"you skipped it. honestly? very human.");
 $("#again").onclick=()=>begin("chaos");$("#share").onclick=shareResult;$("#dare").onclick=dareFriend;
 
 const ds=parseInt(localStorage.getItem("hc_streak")||"0",10),dk=dateKey();
