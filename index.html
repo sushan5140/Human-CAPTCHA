@@ -1,92 +1,75 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="theme-color" content="#080808"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080808">
 <title>Human CAPTCHA — prove you still exist</title>
-<meta name="description" content="A daily anti-doomscroll reality check. Prove you're still human."/>
+<meta name="description" content="A daily internet-brain check. No robots. Just vibes.">
 <style>
-:root{
-  --bg:#080808;--panel:#101010;--panel2:#151515;--line:#252525;--text:#f7f7f3;
-  --muted:#8f8f8a;--lime:#b5ff6d;--yellow:#ffd166;--red:#ff6b6b;--violet:#d9c7ff;
-}
-*{box-sizing:border-box} html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input{font:inherit} button{touch-action:manipulation}
-body{
-  min-height:100vh;display:grid;place-items:center;padding:18px;
-  background:
-    radial-gradient(circle at 12% 8%,rgba(181,255,109,.08),transparent 25%),
-    radial-gradient(circle at 88% 12%,rgba(217,199,255,.08),transparent 28%),
-    #080808;
-}
-.app{width:min(940px,100%);border:1px solid var(--line);border-radius:28px;overflow:hidden;background:rgba(13,13,13,.96);box-shadow:0 32px 110px rgba(0,0,0,.42)}
-.top{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line);gap:12px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:-.03em}.pulse{width:10px;height:10px;border-radius:50%;background:var(--lime);box-shadow:0 0 20px rgba(181,255,109,.65)}
-.meta{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}
-.screen{padding:clamp(28px,6vw,62px);animation:enter .38s cubic-bezier(.2,.8,.2,1)}
-@keyframes enter{from{opacity:0;transform:translateY(10px) scale(.995)}to{opacity:1;transform:none}}
-.kicker{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);letter-spacing:.16em;text-transform:uppercase}
-h1{font-size:clamp(48px,8.6vw,92px);line-height:.9;letter-spacing:-.075em;margin:17px 0 20px;max-width:780px}
-.lead{font-size:clamp(17px,2.2vw,22px);line-height:1.55;color:#b8b8b4;max-width:720px;margin:0}
-.hero-badge{display:inline-flex;gap:8px;align-items:center;margin-top:24px;border:1px solid #2d2d2d;background:#111;border-radius:999px;padding:8px 11px;color:#aaa;font:11px ui-monospace,SFMono-Regular,Menlo,monospace}
-.peek-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}
-.peek{border:1px solid #292929;border-radius:14px;padding:12px;background:#0d0d0d}
-.peek b{display:block;font-size:13px;margin-bottom:4px}
-.peek span{color:#777;font-size:11px;line-height:1.35}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.btn{min-height:46px;border:1px solid var(--line);border-radius:14px;background:#171717;color:var(--text);padding:13px 17px;font-weight:750;cursor:pointer;transition:.18s ease}.btn:hover{transform:translateY(-2px);border-color:#454545}.btn:active{transform:scale(.99)}.btn.primary{background:var(--text);color:#090909;border-color:var(--text)}.btn.lime{background:var(--lime);color:#0b0b0b;border-color:var(--lime)}.btn.ghost{color:#b5b5b1}
-.hidden{display:none!important}
-.mini-note{margin-top:16px;color:#74746f;font-size:13px;line-height:1.5}
-.challenge-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:16px;margin-top:28px}
-.card{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#121212,#0f0f0f)}
-.challenge{padding:24px;min-height:440px}.challenge-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.step{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}.chip{border:1px solid #303030;border-radius:999px;padding:6px 9px;color:#bdbdb8;font:10px ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;letter-spacing:.08em}
-.challenge h2{font-size:clamp(30px,4.6vw,48px);line-height:1.04;letter-spacing:-.055em;margin:20px 0 12px}.challenge p{color:#a7a7a2;line-height:1.58;margin:0 0 20px}
-.side{padding:20px}.stat{padding:13px 0;border-bottom:1px solid var(--line)}.stat:last-child{border-bottom:0}.stat label{display:block;color:#767671;font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em}.stat strong{font-size:30px;letter-spacing:-.055em}.stat .small{font-size:18px}
-.progress{height:7px;border-radius:99px;background:#242424;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--yellow),var(--lime));transition:width .45s cubic-bezier(.2,.8,.2,1)}
-.input-row{display:flex;gap:9px;flex-wrap:wrap}.textinput{flex:1;min-width:220px;background:#0b0b0b;color:#fff;border:1px solid #303030;border-radius:12px;padding:13px 14px;outline:none}.textinput:focus{border-color:#5a5a5a;box-shadow:0 0 0 3px rgba(255,255,255,.025)}
-.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.choice{border:1px solid #2d2d2d;background:#0d0d0d;color:#e8e8e4;border-radius:13px;padding:14px;cursor:pointer;text-align:left;min-height:50px;transition:.18s}.choice:hover{transform:translateY(-1px);border-color:#4a4a4a}
-.feedback{margin-top:14px;padding:13px 14px;border-radius:13px;font-size:14px;line-height:1.45;border:1px solid #303030;animation:pop .2s ease}@keyframes pop{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}.feedback.good{background:#11190c;border-color:#334a21;color:#d1ffad}.feedback.bad{background:#1b1010;border-color:#4b2828;color:#ffb0b0}
-.resetbox{border:1px solid #2d2d2d;border-radius:16px;background:#0b0b0b;padding:17px}.resetbox strong{display:block;margin-bottom:7px}.timer{font:800 42px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.06em;margin:10px 0}
-.rizz{font-size:22px;line-height:1.42;letter-spacing:-.02em;color:#e5e1ef}
-.escalation{height:4px;background:#1e1e1e;border-radius:99px;overflow:hidden;margin-top:17px}.escalation>div{height:100%;background:linear-gradient(90deg,var(--lime),var(--yellow),var(--red));transition:width .4s ease}
-.receipt{border:1px solid #2e2e2e;border-radius:22px;padding:28px;background:
-  linear-gradient(180deg,rgba(181,255,109,.04),transparent 40%),#101010;position:relative;overflow:hidden}
-.receipt:before{content:"HUMANITY RECEIPT";position:absolute;right:-36px;top:24px;transform:rotate(38deg);font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;color:#5d5d58}
-.receipt-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}.scorebig{font-size:clamp(64px,13vw,110px);line-height:.82;letter-spacing:-.09em;font-weight:900}.percent{font-size:.42em;vertical-align:top;margin-left:3px}.archetype{font-size:clamp(28px,5vw,52px);line-height:.95;letter-spacing:-.055em;margin:20px 0 10px}.receipt-copy{color:#a9a9a4;line-height:1.55;max-width:650px}
-.receipt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:22px}.receipt-stat{border:1px solid #292929;border-radius:13px;padding:12px;background:#0c0c0c}.receipt-stat label{display:block;font-size:10px;color:#74746f;text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}.receipt-stat strong{font-size:17px}
-.secret{margin-top:18px;border:1px dashed #414141;border-radius:15px;padding:15px;color:#aaa;background:#0c0c0c}.secret strong{color:var(--lime)}
-.footer{padding:15px 18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#696965;font:10px ui-monospace,SFMono-Regular,Menlo,monospace}
-.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(15px);background:#f4f4ef;color:#0b0b0b;padding:11px 14px;border-radius:999px;font-weight:750;font-size:13px;opacity:0;pointer-events:none;transition:.22s;z-index:20}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:720px){body{padding:9px}.app{border-radius:20px}.screen{padding:28px 19px}.challenge-grid{grid-template-columns:1fr}.choices{grid-template-columns:1fr}.receipt-grid{grid-template-columns:1fr}.peek-grid{grid-template-columns:repeat(2,1fr)}.meta{display:none}.challenge{min-height:0}.scorebig{font-size:76px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+:root{--bg:#080808;--panel:#101010;--panel2:#151515;--line:#272727;--text:#f7f7f2;--muted:#85857f;--lime:#b7ff6e;--yellow:#ffd166;--red:#ff6b6b;--violet:#d8c8ff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}button{touch-action:manipulation}
+body{min-height:100vh;display:grid;place-items:center;padding:14px;background:radial-gradient(circle at 12% 8%,rgba(183,255,110,.07),transparent 24%),radial-gradient(circle at 88% 10%,rgba(216,200,255,.07),transparent 26%),#080808}
+.app{width:min(950px,100%);border:1px solid var(--line);border-radius:28px;overflow:hidden;background:rgba(13,13,13,.97);box-shadow:0 34px 110px rgba(0,0,0,.44)}
+.top{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line)}
+.brand{display:flex;gap:10px;align-items:center;font-weight:850;letter-spacing:-.03em}.pulse{width:10px;height:10px;border-radius:99px;background:var(--lime);box-shadow:0 0 18px rgba(183,255,110,.55)}
+.meta,.step,.chip,.kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.meta{font-size:11px;color:var(--muted)}
+.screen{padding:clamp(28px,6vw,62px);animation:in .32s ease}.hidden{display:none!important}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.kicker{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(50px,8vw,92px);line-height:.9;letter-spacing:-.075em;margin:18px 0 20px;max-width:780px}
+.lead{font-size:clamp(17px,2.1vw,22px);line-height:1.55;color:#b8b8b2;max-width:720px;margin:0}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;margin-top:22px;border:1px solid #2d2d2d;border-radius:999px;padding:8px 11px;background:#101010;color:#aaa;font:11px ui-monospace,SFMono-Regular,Menlo,monospace}
+.peek-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}.peek{border:1px solid #292929;border-radius:14px;background:#0d0d0d;padding:12px}.peek b{display:block;font-size:13px;margin-bottom:4px}.peek span{font-size:11px;line-height:1.35;color:#777}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:27px}.btn{min-height:46px;border:1px solid var(--line);border-radius:14px;background:#171717;color:var(--text);padding:13px 17px;font-weight:760;cursor:pointer;transition:.17s}.btn:hover{transform:translateY(-2px);border-color:#484848}.btn:active{transform:scale(.99)}.btn.lime{background:var(--lime);color:#090909;border-color:var(--lime)}.btn.primary{background:var(--text);color:#080808;border-color:var(--text)}.btn.ghost{color:#aaa}.btn.danger{background:#1a1010;border-color:#4a2929;color:#ffb6b6}
+.mini-note{margin-top:15px;color:#71716c;font-size:13px;line-height:1.5}
+.escalation{height:4px;background:#1c1c1c;border-radius:99px;overflow:hidden;margin-top:16px}.escalation>div{height:100%;background:linear-gradient(90deg,var(--lime),var(--yellow),var(--red));transition:width .35s ease}
+.grid{display:grid;grid-template-columns:1.35fr .65fr;gap:16px;margin-top:26px}.card{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#121212,#0f0f0f)}
+.challenge{padding:24px;min-height:440px}.challenge-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.step{font-size:11px;color:var(--muted)}.chip{font-size:10px;text-transform:uppercase;letter-spacing:.08em;border:1px solid #303030;border-radius:999px;padding:6px 9px;color:#bcbcb7}
+.challenge h2{font-size:clamp(30px,4.6vw,48px);line-height:1.04;letter-spacing:-.055em;margin:20px 0 12px}.challenge p{color:#a4a49e;line-height:1.55;margin:0 0 20px}
+.side{padding:20px}.stat{padding:13px 0;border-bottom:1px solid var(--line)}.stat:last-child{border:0}.stat label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#74746f;margin-bottom:6px}.stat strong{font-size:30px;letter-spacing:-.055em}.stat strong.small{font-size:18px}
+.progress{height:7px;border-radius:99px;background:#242424;overflow:hidden;margin-top:10px}.bar{height:100%;width:50%;background:linear-gradient(90deg,var(--yellow),var(--lime));transition:width .4s ease}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.choice{border:1px solid #2e2e2e;background:#0c0c0c;color:#ecece7;border-radius:13px;padding:14px;text-align:left;cursor:pointer;min-height:50px;transition:.16s}.choice:hover{border-color:#4a4a4a;transform:translateY(-1px)}
+.input-row{display:flex;gap:9px;flex-wrap:wrap}.textinput{flex:1;min-width:220px;border:1px solid #303030;border-radius:12px;background:#0b0b0b;color:#fff;padding:13px 14px;outline:none}.textinput:focus{border-color:#5a5a5a}
+.feedback{margin-top:14px;padding:13px 14px;border-radius:13px;border:1px solid #303030;font-size:14px;line-height:1.45}.feedback.good{background:#11190c;border-color:#334b21;color:#d1ffad}.feedback.bad{background:#1b1010;border-color:#4c2929;color:#ffb3b3}
+.resetbox{border:1px solid #2e2e2e;border-radius:16px;background:#0b0b0b;padding:17px}.resetbox strong{display:block;margin-bottom:7px}.timer{font:800 42px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.06em;margin:10px 0}.rizz{font-size:22px;line-height:1.42;color:#e5e1ef}
+.fake-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.fake-btn{min-height:64px;border:1px solid #333;border-radius:14px;background:#111;color:#ddd;cursor:pointer}.fake-btn:hover{border-color:#555}.fake-btn.red{background:#2a1111}.fake-btn.blue{background:#11172a}.fake-btn.yellow{background:#29230f}.fake-btn.purple{background:#1f1428}
+.human-traits{display:grid;gap:8px}.trait{display:flex;align-items:center;gap:10px;border:1px solid #2d2d2d;border-radius:12px;padding:12px;background:#0c0c0c;cursor:pointer}.trait input{accent-color:var(--lime)}
+.receipt{border:1px solid #2e2e2e;border-radius:22px;padding:28px;background:linear-gradient(180deg,rgba(183,255,110,.04),transparent 40%),#101010;position:relative;overflow:hidden}.receipt:before{content:"HUMANITY RECEIPT";position:absolute;right:-36px;top:24px;transform:rotate(38deg);font:800 10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;color:#5d5d58}
+.scorebig{font-size:clamp(68px,13vw,112px);line-height:.82;letter-spacing:-.095em;font-weight:900}.percent{font-size:.42em;vertical-align:top}.archetype{font-size:clamp(30px,5vw,54px);line-height:.95;letter-spacing:-.055em;margin:20px 0 10px}.receipt-copy{color:#aaa;line-height:1.55;max-width:650px}.receipt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:22px}.receipt-stat{border:1px solid #292929;border-radius:13px;padding:12px;background:#0c0c0c}.receipt-stat label{display:block;font-size:10px;color:#74746f;text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}.receipt-stat strong{font-size:17px}
+.secret{margin-top:17px;border:1px dashed #414141;border-radius:14px;padding:14px;color:#aaa}.secret strong{color:var(--lime)}
+.footer{padding:15px 18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#676762;font:10px ui-monospace,SFMono-Regular,Menlo,monospace}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(14px);background:#f4f4ef;color:#080808;padding:11px 14px;border-radius:999px;font-weight:750;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:20}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:720px){body{padding:8px}.app{border-radius:20px}.screen{padding:28px 18px}.grid{grid-template-columns:1fr}.choices,.fake-grid{grid-template-columns:1fr}.peek-grid{grid-template-columns:repeat(2,1fr)}.receipt-grid{grid-template-columns:1fr}.meta{display:none}.challenge{min-height:0}.scorebig{font-size:78px}}
 </style>
 </head>
 <body>
 <main class="app">
-<header class="top"><div class="brand"><span class="pulse"></span> Human CAPTCHA</div><div class="meta" id="topMeta">daily anti-doomscroll protocol</div></header>
+<header class="top"><div class="brand"><span class="pulse"></span> Human CAPTCHA</div><div class="meta">for legal humans only</div></header>
 
 <section class="screen" id="intro">
-  <div class="kicker" id="dailyLabel">daily humanity check</div>
+  <div class="kicker" id="dailyLabel">daily cooked check</div>
   <h1>prove you still exist.</h1>
-  <p class="lead">CAPTCHA normally asks if you're a robot. This one asks something worse: <b>how cooked are you right now?</b></p>
-  <div class="hero-badge"><span>◉</span><span id="dailyRun">today's shared run loading…</span></div>
+  <p class="lead">robots get traffic lights. you get judged for having <b>37 tabs open and zero clue why.</b></p>
+  <div class="hero-badge"><span>◉</span><span id="dailyRun">loading today's nonsense…</span></div>
   <div class="peek-grid">
-    <div class="peek"><b>daily check</b><span>same nonsense for everyone today</span></div>
-    <div class="peek"><b>chaos mode</b><span>for when normal is not enough</span></div>
-    <div class="peek"><b>humanity receipt</b><span>yes it judges you at the end</span></div>
-    <div class="peek"><b>dare a friend</b><span>drag someone else into this</span></div>
+    <div class="peek"><b>daily check</b><span>same cursed run for everyone</span></div>
+    <div class="peek"><b>chaos mode</b><span>normal rules have left the chat</span></div>
+    <div class="peek"><b>humanity receipt</b><span>screenshot bait. obviously.</span></div>
+    <div class="peek"><b>dare a friend</b><span>drag the group chat into it</span></div>
   </div>
   <div class="actions">
-    <button class="btn lime" id="startDaily">do today's nonsense</button>
-    <button class="btn" id="startChaos">nah i'm COOKED cooked</button>
+    <button class="btn lime" id="startDaily">aight test me</button>
+    <button class="btn" id="startChaos">i'm cooked cooked</button>
   </div>
-  <div class="mini-note" id="streakNote">No login. No weird data grab. Just vibes and localStorage.</div>
+  <div class="mini-note" id="streakNote">no login. no lore collection. localStorage and vibes.</div>
 </section>
 
 <section class="screen hidden" id="game">
-  <div class="kicker" id="gameKicker">humanity check in progress</div>
-  <div class="escalation"><div id="escalationBar"></div></div>
-  <div class="challenge-grid">
+  <div class="kicker" id="gameKicker">bro is being evaluated</div>
+  <div class="escalation"><div id="esc"></div></div>
+  <div class="grid">
     <section class="card challenge">
       <div class="challenge-head"><span class="step" id="stepLabel">CHECK 1 / 7</span><span class="chip" id="chip">warm-up</span></div>
       <h2 id="title"></h2>
@@ -94,46 +77,41 @@ h1{font-size:clamp(48px,8.6vw,92px);line-height:.9;letter-spacing:-.075em;margin
       <div id="ui"></div>
       <div class="feedback hidden" id="feedback"></div>
       <div class="actions">
-        <button class="btn primary hidden" id="next">next</button>
-        <button class="btn ghost" id="skip">skip with dignity</button>
+        <button class="btn primary hidden" id="next">next ig</button>
+        <button class="btn ghost" id="skip">skip lol</button>
       </div>
     </section>
     <aside class="card side">
-      <div class="stat"><label>Humanity</label><strong id="score">50%</strong><div class="progress"><div class="bar" id="bar"></div></div></div>
-      <div class="stat"><label>Streak</label><strong id="runStreak">0</strong></div>
-      <div class="stat"><label>Current form</label><strong class="small" id="form">suspicious</strong></div>
-      <div class="stat"><label>Chaos level</label><strong class="small" id="chaos">civilized</strong></div>
+      <div class="stat"><label>humanity</label><strong id="score">50%</strong><div class="progress"><div class="bar" id="bar"></div></div></div>
+      <div class="stat"><label>streak</label><strong id="runStreak">0</strong></div>
+      <div class="stat"><label>current form</label><strong class="small" id="form">questionable</strong></div>
+      <div class="stat"><label>chaos</label><strong class="small" id="chaos">chill</strong></div>
     </aside>
   </div>
 </section>
 
 <section class="screen hidden" id="result">
-  <div class="kicker">verification complete</div>
-  <div class="receipt" id="receipt">
-    <div class="receipt-top">
-      <div>
-        <div class="scorebig"><span id="finalScore">82</span><span class="percent">%</span></div>
-        <div class="archetype" id="archetype">Certified Organism</div>
-      </div>
-      <span class="chip" id="receiptDay">DAILY #000</span>
-    </div>
+  <div class="kicker">welp. here's the damage</div>
+  <div class="receipt">
+    <div class="scorebig"><span id="finalScore">82</span><span class="percent">%</span></div>
+    <div class="archetype" id="archetype">Side Quest Consumed Main Quest</div>
     <p class="receipt-copy" id="resultCopy"></p>
     <div class="receipt-grid">
       <div class="receipt-stat"><label>final form</label><strong id="finalForm">human-ish</strong></div>
       <div class="receipt-stat"><label>daily streak</label><strong id="dailyStreak">1 day</strong></div>
-      <div class="receipt-stat"><label>reality contact</label><strong id="reality">restored</strong></div>
+      <div class="receipt-stat"><label>reality status</label><strong id="reality">buffering</strong></div>
     </div>
-    <div class="secret hidden" id="secret"><strong>SECRET ENDING UNLOCKED</strong><br/>You scored high enough to legally close a tab. Pick one. Any one. We believe in you.</div>
+    <div class="secret hidden" id="secret"><strong>secret ending unlocked</strong><br>you may close one tab. don't panic.</div>
   </div>
   <div class="actions">
-    <button class="btn lime" id="share">share my humanity receipt</button>
-    <button class="btn" id="dare">dare a friend</button>
-    <button class="btn ghost" id="again">run chaos mode</button>
+    <button class="btn lime" id="share">drop receipt</button>
+    <button class="btn" id="dare">send this to a victim</button>
+    <button class="btn ghost" id="again">run it back</button>
   </div>
-  <p class="mini-note">Screenshot bait by design. Health-ish prompts are gentle reset suggestions, not medical advice. Skip anything uncomfortable.</p>
+  <p class="mini-note">yes the result card was made to be screenshotted. we're not pretending otherwise.</p>
 </section>
 
-<footer class="footer"><span>built at an unreasonable hour</span><span>funny surface · serious reset underneath</span></footer>
+<footer class="footer"><span>built at a criminal hour</span><span>valid unfortunately</span></footer>
 </main>
 <div class="toast" id="toast">copied</div>
 
@@ -141,107 +119,132 @@ h1{font-size:clamp(48px,8.6vw,92px);line-height:.9;letter-spacing:-.075em;margin
 (()=>{
 const $=s=>document.querySelector(s);
 const intro=$("#intro"),game=$("#game"),result=$("#result"),title=$("#title"),desc=$("#desc"),ui=$("#ui"),feedback=$("#feedback"),next=$("#next"),skip=$("#skip");
-const scoreEl=$("#score"),bar=$("#bar"),runStreakEl=$("#runStreak"),form=$("#form"),chaos=$("#chaos"),stepLabel=$("#stepLabel"),chip=$("#chip"),escBar=$("#escalationBar");
-const finalScore=$("#finalScore"),archetype=$("#archetype"),resultCopy=$("#resultCopy"),finalForm=$("#finalForm"),dailyStreakEl=$("#dailyStreak"),reality=$("#reality"),secret=$("#secret"),receiptDay=$("#receiptDay");
-const toast=$("#toast");
+const scoreEl=$("#score"),bar=$("#bar"),runStreakEl=$("#runStreak"),form=$("#form"),chaos=$("#chaos"),stepLabel=$("#stepLabel"),chip=$("#chip"),esc=$("#esc");
+const finalScore=$("#finalScore"),archetypeEl=$("#archetype"),resultCopy=$("#resultCopy"),finalForm=$("#finalForm"),dailyStreakEl=$("#dailyStreak"),reality=$("#reality"),secret=$("#secret"),toast=$("#toast");
 let score=50,step=0,runStreak=0,answered=false,mode="daily",run=[],seed=1;
 
-const lines=[
- "Are you dark mode? Because suddenly everything feels easier on the eyes.",
- "Are you a keyboard shortcut? Because you just improved my entire workflow.",
- "You look like the kind of notification I'd actually open.",
- "Are you Wi-Fi? Because this connection is suspiciously strong.",
- "If you were a browser tab, I'd finally stop opening new ones."
+const rizz=[
+ "you look like the type of notification i'd actually open.",
+ "are you dark mode? bc somehow this got easier on the eyes.",
+ "if you were a tab i'd still refuse to close you.",
+ "ngl your aura has better uptime than my code.",
+ "are you wifi or am i just delusional again."
 ];
-const archetypes=[
-  {min:92,name:"Certified Organism",copy:"You touched reality for a few minutes and somehow came back alive. Embarrassingly human."},
-  {min:82,name:"Main-Quest Survivor",copy:"You forgot the plot, found it again, and only lost like 12 tabs in the process."},
-  {min:70,name:"Chronically Online, Recoverable",copy:"The feed has custody of you but apparently visitation rights still exist."},
-  {min:55,name:"Side-Quest Goblin",copy:"You opened one thing and somehow came back with 14 tabs, one random obsession, and zero progress."},
-  {min:0,name:"Chair Fossil",copy:"At this point the chair should start charging you rent."}
+const outcomes=[
+ {min:94,name:"Certified Menace",copy:"you beat the test but at what cost. aura +12. screen time still concerning."},
+ {min:84,name:"Main Quest Survivor",copy:"plot recovered. somehow. absolute cinema."},
+ {min:72,name:"Chronically Online But Funny",copy:"the algorithm has custody but you still get weekend visitation."},
+ {min:58,name:"Side Quest Consumed Main Quest",copy:"you opened one thing and came back with 14 tabs, lore, and no progress. generational talent."},
+ {min:0,name:"Chair Lore Activated",copy:"that chair knows too much about you atp."}
 ];
 
-function dateKey(){
- const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
+function dateKey(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function rng(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
 function seededShuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function randomShuffle(a){return [...a].sort(()=>Math.random()-.5)}
-function dayNumber(){return Math.floor(new Date()/86400000)}
-function showToast(t){toast.textContent=t;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1700)}
-function setScore(delta){score=Math.max(0,Math.min(100,score+delta));scoreEl.textContent=score+"%";bar.style.width=score+"%";form.textContent=score>=88?"alarmingly human":score>=70?"mostly sentient":score>=52?"questionable":"NPC adjacent"}
-function complete(ok,msg,delta=9){if(answered)return;answered=true;feedback.className="feedback "+(ok?"good":"bad");feedback.textContent=msg;feedback.classList.remove("hidden");next.classList.remove("hidden");if(ok){runStreak++;setScore(delta)}else{runStreak=0;setScore(-6)}runStreakEl.textContent=runStreak}
+function showToast(t){toast.textContent=t;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1600)}
+function setScore(delta){score=Math.max(0,Math.min(103,score+delta));scoreEl.textContent=score+"%";bar.style.width=Math.min(100,score)+"%";form.textContent=score>=90?"aura farming":score>=72?"sentient-ish":score>=55?"cooked":"deep fried"}
+function done(ok,msg,delta=8){if(answered)return;answered=true;feedback.className="feedback "+(ok?"good":"bad");feedback.textContent=msg;feedback.classList.remove("hidden");next.classList.remove("hidden");if(ok){runStreak++;setScore(delta)}else{runStreak=0;setScore(-4)}runStreakEl.textContent=runStreak}
 function choices(items,cb){const w=document.createElement("div");w.className="choices";items.forEach((x,i)=>{const b=document.createElement("button");b.className="choice";b.textContent=x;b.onclick=()=>cb(i);w.appendChild(b)});ui.appendChild(w)}
-function textBox(ph,validator,yes,no){ui.innerHTML='<div class="input-row"><input id="answer" class="textinput" placeholder="'+ph.replace(/"/g,"&quot;")+'"><button id="submit" class="btn">submit proof</button></div>';const go=()=>{const v=$("#answer").value;const ok=validator(v);complete(ok,ok?yes:no)};$("#submit").onclick=go;$("#answer").onkeydown=e=>{if(e.key==="Enter")go()}}
-function timerBox(seconds,label,yes){
- ui.innerHTML='<div class="resetbox"><strong>'+label+'</strong><div class="timer" id="timer">'+seconds+'s</div><button class="btn" id="timerBtn">start</button></div>';
- const b=$("#timerBtn"),t=$("#timer");b.onclick=()=>{if(answered)return;let n=seconds;b.disabled=true;b.textContent="actually do it 😭";const iv=setInterval(()=>{n--;t.textContent=n+"s";if(n<=0){clearInterval(iv);t.textContent="done";b.disabled=false;b.textContent="i'm back";b.onclick=()=>complete(true,yes,11)}},1000)}
-}
+function textBox(ph,yes,no){ui.innerHTML='<div class="input-row"><input class="textinput" id="answer" placeholder="'+ph.replace(/"/g,"&quot;")+'"><button class="btn" id="submit">send it</button></div>';const go=()=>{const v=$("#answer").value.trim();done(v.length>1,v.length>1?yes:no,v.length>1?8:-2)};$("#submit").onclick=go;$("#answer").onkeydown=e=>{if(e.key==="Enter")go()}}
+function timer(seconds,label,msg){ui.innerHTML='<div class="resetbox"><strong>'+label+'</strong><div class="timer" id="timer">'+seconds+'s</div><button class="btn" id="timerBtn">fine</button></div>';const b=$("#timerBtn"),t=$("#timer");b.onclick=()=>{let n=seconds;b.disabled=true;b.textContent="do it fr";const iv=setInterval(()=>{n--;t.textContent=n+"s";if(n<=0){clearInterval(iv);t.textContent="done";b.disabled=false;b.textContent="i'm back";b.onclick=()=>done(true,msg,10)}},1000)}}
 
 const pool=[
- {phase:"warm-up",cat:"main quest",title:"what were you doing before this tab?",desc:"be fr what were you ACTUALLY doing before the internet kidnapped you",render(){textBox("fixing OAuth, studying, absolutely nothing…",v=>v.trim().length>2,"oh wow you remembered. main character moment.","yeah no the plot is gone 😭")}},
- {phase:"warm-up",cat:"reality",title:"name one thing you can hear that isn't this device.",desc:"there is allegedly a world outside this screen",render(){textBox("fan, traffic, someone yelling…",v=>v.trim().length>1,"okayyy outside world still exists","nothing?? bro lives in the void")}},
- {phase:"personal",cat:"body check",title:"how long have you been sitting like that?",desc:"no lying this is between you and the chair",render(){choices(["under 20 min","20–45 min","45–90 min","time has lost meaning"],i=>complete(true,i<2?"fair enough you're not furniture yet":"you and that chair are basically in a relationship now",7))}},
- {phase:"personal",cat:"posture",title:"inspect your current shape.",desc:"be honest nobody is screenshotting this",render(){choices(["functional human","slightly tense","shrimp mode","Victorian gargoyle"],i=>complete(true,i===0?"wait... normal posture?? in THIS economy??":"shrimp allegations confirmed",7))}},
- {phase:"physical",cat:"tiny exercise",title:"stand up. yes, actually.",desc:"if you're comfy doing it stand up for 20 secs roll your shoulders once and stare at literally anything that isn't glowing",render(){timerBox(20,"20-second physical-world patch","there. body rebooted. don't make it emotional.")}},
- {phase:"physical",cat:"screen break",title:"ten seconds without pixels.",desc:"look away for ten seconds. smartwatch does NOT count nice try.",render(){timerBox(10,"tiny reality break","congrats you saw an object in real life")}},
- {phase:"weird",cat:"hobby spark",title:"your brain requests non-productive joy.",desc:"if nobody cared about productivity for 15 mins what would you actually wanna do",render(){textBox("music, sketching, walking, cooking, gaming…",v=>v.trim().length>1,"SEE. you do have hobbies 😭","damn they really turned you into LinkedIn")}},
- {phase:"weird",cat:"rizz packet",title:"dopamine delivery arrived.",desc:"one horrible line because apparently your dopamine budget is low",render(){const line=lines[Math.floor((mode==="daily"?rng():Math.random())*lines.length)];ui.innerHTML='<div class="resetbox"><strong>RIZZ PACKET</strong><div class="rizz">'+line+'</div><button class="btn" id="rizzBtn" style="margin-top:15px">that's criminal 😭</button></div>';$("#rizzBtn").onclick=()=>complete(true,"you hated it. you smiled. case closed.",8)}},
- {phase:"chaos",cat:"free will",title:"okay be painfully honest.",desc:"what happens after you say ‘one more reel’?",render(){choices(["I actually stop","7 more magically happen","I switch apps and call it a break","it becomes tomorrow"],i=>{const msgs=["LIAR 😭","there we go. human behavior detected.","elite loophole. deeply human.","oh you're GONE gone"];complete(true,msgs[i],i===0?4:9)})}},
- {phase:"chaos",cat:"future you",title:"future-you has entered the chat.",desc:"what tiny thing can you do now so future-you doesn't call you a loser later",render(){textBox("send the email, save the file, sleep…",v=>v.trim().length>2,"future-you says "fine we're cool"","future-you blocked you")}},
- {phase:"chaos",cat:"day check",title:"what day is it?",desc:"no googling. that would be CRAZY.",render(){const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],today=new Date().getDay();let opts=seededShuffle(days.map((d,i)=>({d,i}))).slice(0,4);if(!opts.some(x=>x.i===today))opts[0]={d:days[today],i:today};opts=seededShuffle(opts);choices(opts.map(x=>x.d),i=>complete(true,opts[i].i===today?"okay calendar privileges retained":"wrong day but honestly valid. days are fake anyway.",opts[i].i===today?9:6))}}
+ {phase:"warm",cat:"main quest",title:"wait what were you doing before this?",desc:"be so fr. what was the original mission before 9 side quests spawned?",render(){textBox("coding? studying? stalking a package?", "oh you remembered. rare W.","yeah the plot is cooked 😭")}},
+ {phase:"warm",cat:"phone lore",title:"why did you unlock your phone?",desc:"pick the one that hurts.",render(){choices(["reply to someone","check one thing","muscle memory","don't attack me"],i=>done(true,["productive? sus.","famous last words.","there it is.","valid unfortunately."][i],i===2?9:7))}},
+ {phase:"personal",cat:"37 tabs",title:"you have 37 tabs open. which one can go?",desc:"choose wisely. this is fake stakes.",render(){choices(["none","literally none","they're all important","don't touch my tabs"],()=>done(true,"browser landlord behavior confirmed.",9))}},
+ {phase:"personal",cat:"chair lore",title:"how long have you been sitting like that?",desc:"no cap. the chair already knows the answer.",render(){choices(["like 10 mins","maybe 40","2 business hours","time is a social construct"],i=>done(true,i<2?"not furniture yet.":"bro and the chair are locked in.",7))}},
+ {phase:"physical",cat:"touch grass lite",title:"stand up for 15 secs.",desc:"not a wellness lecture. your spine just sent a support ticket.",render(){timer(15,"tiny body patch","okay cool. don't make this wholesome.")}},
+ {phase:"physical",cat:"look away",title:"look at something that isn't glowing.",desc:"ten seconds. yes the ceiling counts.",render(){timer(10,"pixel detox but don't call it that","congrats on discovering objects.")}},
+ {phase:"weird",cat:"wrong day",title:"what day is it?",desc:"easy one btw.",render(){
+   const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],today=new Date().getDay();
+   let wrong=days.map((d,i)=>({d,i})).filter(x=>x.i!==today);
+   wrong=mode==="daily"?seededShuffle(wrong):randomShuffle(wrong);
+   const opts=[wrong[0].d,wrong[1].d,"2019","payday"];
+   choices(opts,()=>done(true,"wait why are none of these right\n\nexactly. welcome back.",10));
+ }},
+ {phase:"weird",cat:"human traits",title:"select all that prove you're human.",desc:"scientifically sourced from absolutely nowhere.",render(){
+   ui.innerHTML='<div class="human-traits">'+[
+     "opened the fridge with no plan",
+     "typed a message then deleted it",
+     "said 'one more reel' and lied",
+     "rehearsed an argument that never happened"
+   ].map((x,i)=>'<label class="trait"><input type="checkbox" data-i="'+i+'"> '+x+'</label>').join("")+'</div><button class="btn" id="traitDone" style="margin-top:12px">that's enough evidence</button>';
+   $("#traitDone").onclick=()=>{const n=ui.querySelectorAll("input:checked").length;done(true,n===4?"bro collected the whole set 😭":n===0?"lying on a CAPTCHA is insane":"human enough tbh",8+n)};
+ }},
+ {phase:"weird",cat:"green button",title:"click the green button.",desc:"should be pretty obvious.",render(){
+   ui.innerHTML='<div class="fake-grid"><button class="fake-btn red">red</button><button class="fake-btn blue">blue</button><button class="fake-btn yellow">yellow</button><button class="fake-btn purple">purple</button></div>';
+   ui.querySelectorAll("button").forEach(b=>b.onclick=()=>done(true,"why were you still looking for green 😭",9));
+ }},
+ {phase:"chaos",cat:"don't click",title:"do NOT click this button.",desc:"seriously. don't.",render(){
+   ui.innerHTML='<button class="btn danger" id="dont">obviously click me</button>';
+   $("#dont").onclick=()=>done(true,"predictable species.",9);
+ }},
+ {phase:"chaos",cat:"one more reel",title:"what happens after ‘one more reel’?",desc:"don't perform morality for a website.",render(){choices(["i stop actually","7 more spawn","switch apps = break","it becomes tomorrow"],i=>done(true,["be so fr 😭","human behavior detected.","elite loophole.","oh you're GONE gone."][i],i===0?5:9))}},
+ {phase:"chaos",cat:"rizz",title:"emergency dopamine drop.",desc:"this is going to be terrible.",render(){
+   const line=rizz[Math.floor((mode==="daily"?rng():Math.random())*rizz.length)];
+   ui.innerHTML='<div class="resetbox"><strong>rizz packet</strong><div class="rizz">'+line+'</div><button class="btn" id="rizzBtn" style="margin-top:14px">jail.</button></div>';
+   $("#rizzBtn").onclick=()=>done(true,"you smiled. don't lie.",8);
+ }},
+ {phase:"final",cat:"final boss",title:"final boss: close this tab.",desc:"go on then. prove free will exists.",render(){
+   choices(["absolutely not","you close it","i have attachment issues","one more check"],()=>done(true,"yeah that's what i thought.",10));
+ }}
 ];
 
 function makeRun(){
- if(mode==="daily"){seed=hash(dateKey());const ordered=seededShuffle(pool);const byPhase=["warm-up","personal","physical","weird","chaos"];let selected=[];byPhase.forEach(p=>{const candidates=ordered.filter(x=>x.phase===p);if(candidates.length)selected.push(candidates[0])});const extras=ordered.filter(x=>!selected.includes(x));selected.push(...extras.slice(0,2));return selected.slice(0,7)}
- return randomShuffle(pool).slice(0,7);
+ const must=["wrong day","37 tabs","don't click","final boss"];
+ const chosen=[];
+ const picker=mode==="daily"?(seed=hash(dateKey()),seededShuffle(pool)):randomShuffle(pool);
+ must.forEach(cat=>{const q=picker.find(x=>x.cat===cat);if(q)chosen.push(q)});
+ const rest=picker.filter(x=>!chosen.includes(x)&&x.cat!=="final boss").slice(0,4);
+ const final=chosen.find(x=>x.cat==="final boss");
+ const body=[...chosen.filter(x=>x.cat!=="final boss"),...rest].slice(0,7);
+ return [...(mode==="daily"?seededShuffle(body):randomShuffle(body)),final];
 }
 function render(){
  answered=false;feedback.classList.add("hidden");next.classList.add("hidden");ui.innerHTML="";
- const c=run[step];stepLabel.textContent="CHECK "+(step+1)+" / "+run.length;chip.textContent=c.cat;title.textContent=c.title;desc.textContent=c.desc;
- const pct=((step+1)/run.length)*100;escBar.style.width=pct+"%";chaos.textContent=step<2?"civilized":step<4?"getting weird":step<6?"unhinged":"internet damage";
+ const c=run[step];
+ const fakeStep=step===6?"8 / 7":(step+1)+" / 7";
+ stepLabel.textContent="CHECK "+fakeStep;
+ chip.textContent=c.cat;title.textContent=c.title;desc.textContent=c.desc;
+ esc.style.width=((step+1)/run.length*100)+"%";
+ chaos.textContent=step<2?"chill":step<4?"sus":step<6?"cooked":"deep fried";
  c.render();
 }
 function begin(which){
- mode=which;score=50;step=0;runStreak=0;run=makeRun();scoreEl.textContent="50%";bar.style.width="50%";runStreakEl.textContent="0";form.textContent="suspicious";chaos.textContent="civilized";
- $("#gameKicker").textContent=mode==="daily"?"same chaos as everyone else today":"chaos mode. bad decisions encouraged";
- intro.classList.add("hidden");result.classList.add("hidden");game.classList.remove("hidden");render()
+ mode=which;score=50;step=0;runStreak=0;run=makeRun();
+ scoreEl.textContent="50%";bar.style.width="50%";runStreakEl.textContent="0";form.textContent="questionable";chaos.textContent="chill";
+ $("#gameKicker").textContent=mode==="daily"?"same cursed run as everyone today":"chaos mode. no adult supervision";
+ intro.classList.add("hidden");result.classList.add("hidden");game.classList.remove("hidden");render();
 }
-function updateDailyStreak(){
- const today=dateKey(),last=localStorage.getItem("hc_last"),current=parseInt(localStorage.getItem("hc_streak")||"0",10);
- if(last===today)return current||1;
- const y=new Date();y.setDate(y.getDate()-1);const yk=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
- const nextCount=last===yk?current+1:1;localStorage.setItem("hc_last",today);localStorage.setItem("hc_streak",String(nextCount));return nextCount
+function updateStreak(){
+ const today=dateKey(),last=localStorage.getItem("hc_last"),n=parseInt(localStorage.getItem("hc_streak")||"0",10);
+ if(last===today)return n||1;
+ const d=new Date();d.setDate(d.getDate()-1);const y=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+ const next=last===y?n+1:1;localStorage.setItem("hc_last",today);localStorage.setItem("hc_streak",String(next));return next;
 }
 function finish(){
  game.classList.add("hidden");result.classList.remove("hidden");
- const a=archetypes.find(x=>score>=x.min),ds=mode==="daily"?updateDailyStreak():parseInt(localStorage.getItem("hc_streak")||"0",10);
- finalScore.textContent=score;archetype.textContent=a.name;resultCopy.textContent=a.copy;finalForm.textContent=form.textContent;dailyStreakEl.textContent=ds+" day"+(ds===1?"":"s");reality.textContent=score>=70?"restored":"buffering…";receiptDay.textContent=(mode==="daily"?"DAILY #":"CHAOS #")+String(dayNumber()).slice(-4);secret.classList.toggle("hidden",score<90)
+ const out=outcomes.find(x=>score>=x.min),st=mode==="daily"?updateStreak():parseInt(localStorage.getItem("hc_streak")||"0",10);
+ finalScore.textContent=score;archetypeEl.textContent=out.name;resultCopy.textContent=out.copy;finalForm.textContent=form.textContent;dailyStreakEl.textContent=st+" day"+(st===1?"":"s");reality.textContent=score>=72?"kinda restored":"still loading";secret.classList.toggle("hidden",score<94);
 }
-function shareText(){
- return "I scored "+score+"% human on Human CAPTCHA and got \""+archetype.textContent+"\" 😭\n\nprove you still exist → https://sushan5140.github.io/Human-CAPTCHA/";
-}
-async function shareResult(){
- const text=shareText();if(navigator.share){try{await navigator.share({title:"Human CAPTCHA",text,url:"https://sushan5140.github.io/Human-CAPTCHA/"});return}catch(e){}}
- await navigator.clipboard.writeText(text);showToast("humanity receipt copied")
-}
-async function dareFriend(){
- const text="you've been online too long. prove you still exist 😭\nhttps://sushan5140.github.io/Human-CAPTCHA/?dare=1";
- if(navigator.share){try{await navigator.share({title:"Human CAPTCHA",text,url:"https://sushan5140.github.io/Human-CAPTCHA/?dare=1"});return}catch(e){}}
- await navigator.clipboard.writeText(text);showToast("dare link copied")
+async function shareText(kind){
+ const url="https://sushan5140.github.io/Human-CAPTCHA/";
+ const text=kind==="dare"?"bro take this before you open another reel 😭\n"+url+"?dare=1":"i got "+score+"% human and \""+archetypeEl.textContent+"\" 😭\n"+url;
+ if(navigator.share){try{await navigator.share({title:"Human CAPTCHA",text,url:kind==="dare"?url+"?dare=1":url});return}catch(e){}}
+ try{await navigator.clipboard.writeText(text);showToast(kind==="dare"?"victim link copied":"receipt copied")}catch(e){showToast("copy failed rip")}
 }
 
 $("#startDaily").onclick=()=>begin("daily");$("#startChaos").onclick=()=>begin("chaos");
 next.onclick=()=>{if(step<run.length-1){step++;render()}else finish()};
-skip.onclick=()=>complete(false,"you skipped it. honestly? very human.");
-$("#again").onclick=()=>begin("chaos");$("#share").onclick=shareResult;$("#dare").onclick=dareFriend;
+skip.onclick=()=>done(true,"skipped. honestly very on brand.",5);
+$("#again").onclick=()=>begin("chaos");$("#share").onclick=()=>shareText("share");$("#dare").onclick=()=>shareText("dare");
 
-const ds=parseInt(localStorage.getItem("hc_streak")||"0",10),dk=dateKey();
-$("#dailyRun").textContent="same daily run for everyone · "+dk;
-$("#streakNote").textContent=(ds?"local streak: "+ds+" day"+(ds===1?"":"s")+" · ":"")+"no account · no tracking · your streak stays in this browser";
-if(new URLSearchParams(location.search).has("dare")){$("#dailyLabel").textContent="someone sent you here 😭";$("#startDaily").textContent="accept the humanity dare"}
-bar.style.width="50%";
+const streak=parseInt(localStorage.getItem("hc_streak")||"0",10);
+$("#dailyRun").textContent="same daily nonsense · "+dateKey();
+$("#streakNote").textContent=(streak?"streak: "+streak+" day"+(streak===1?"":"s")+" · ":"")+"no login · no tracking · just vibes";
+if(new URLSearchParams(location.search).has("dare")){$("#dailyLabel").textContent="someone sent you here lmao";$("#startDaily").textContent="accept the dare ig"}
 })();
 </script>
 </body>
