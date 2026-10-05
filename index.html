@@ -170,7 +170,7 @@ const pool=[
      "typed a message then deleted it",
      "said 'one more reel' and lied",
      "rehearsed an argument that never happened"
-   ].map((x,i)=>'<label class="trait"><input type="checkbox" data-i="'+i+'"> '+x+'</label>').join("")+'</div><button class="btn" id="traitDone" style="margin-top:12px">that's enough evidence</button>';
+   ].map((x,i)=>'<label class="trait"><input type="checkbox" data-i="'+i+'"> '+x+'</label>').join("")+'</div><button class="btn" id="traitDone" style="margin-top:12px">thats enough evidence</button>';
    $("#traitDone").onclick=()=>{const n=ui.querySelectorAll("input:checked").length;done(true,n===4?"bro collected the whole set 😭":n===0?"lying on a CAPTCHA is insane":"human enough tbh",8+n)};
  }},
  {phase:"weird",cat:"green button",title:"click the green button.",desc:"should be pretty obvious.",render(){
